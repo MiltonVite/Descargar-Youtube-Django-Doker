@@ -47,7 +47,7 @@ def descargar(request):
             outtmpl = os.path.join(temp_dir, "%(title)s.%(ext)s")
 
             ffmpeg_path = "/usr/bin/ffmpeg"  # Ajusta según tu sistema
-            cookies = '/run/secrets/cookies.txt'  # Render lo monta aquí
+            cookies_path = '/run/secrets/cookies.txt'  # Render lo monta aquí
 
 
             if formato == 'video':
@@ -56,13 +56,13 @@ def descargar(request):
                     "outtmpl": outtmpl,
                     "noplaylist": True,
                     "ffmpeg_location": ffmpeg_path,
-                    "cookiefile": cookies,
+                    "cookiefile": cookies_path,
                 }
             elif formato == 'audio':
                 yt_opts = {
                     "format": "bestaudio/best",
                     "outtmpl": outtmpl,
-                    "cookiefile": cookies,
+                    "cookiefile": cookies_path,
                     "ffmpeg_location": ffmpeg_path,
                     "noplaylist": True,
                     "postprocessors": [{
