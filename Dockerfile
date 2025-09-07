@@ -3,6 +3,8 @@ FROM python:3.13-slim
 
 # Evitar preguntas de instalación
 ENV DEBIAN_FRONTEND=noninteractive
+ENV COOKIE_FILE=/run/secrets/cookies.txt
+ENV COOKIES_PATH=/run/secrets/cookies.txt
 
 # Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
@@ -11,6 +13,9 @@ RUN apt-get update && apt-get install -y \
     curl \
     git \
     && rm -rf /var/lib/apt/lists/*
+
+    RUN mkdir -p /app/downloads
+
 
 # Crear carpeta de la app
 WORKDIR /app
