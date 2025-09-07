@@ -150,7 +150,7 @@
 
 
 <body class="d-flex flex-column min-vh-100">
-
+    <script src="https://www.google.com/recaptcha/api.js?render=6Ld6dcErAAAAABlzJMmTiEDuR7BYR9CM3UXbwHS8"></script>
     <header>
         <nav class="navbar-dark p-2 " style="background-color: #ff0000;">
             <ul class="nav justify-content-center">
@@ -286,6 +286,33 @@
                 hiddenAudio.value = mainInput.value;
             });
         });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("downloadForm");
+
+            form.addEventListener("submit", function (e) {
+                e.preventDefault(); // detener envío hasta obtener token
+
+                grecaptcha.ready(function () {
+                    grecaptcha.execute("6Ld6dcErAAAAABlzJMmTiEDuR7BYR9CM3UXbwHS8", { action: "download" })
+                        .then(function (token) {
+                            // Si ya existe un input con el token, eliminarlo
+                            let existing = form.querySelector('input[name="g-recaptcha-response"]');
+                            if (existing) existing.remove();
+
+                            // agrega token al formulario
+                            let input = document.createElement("input");
+                            input.type = "hidden";
+                            input.name = "g-recaptcha-response";
+                            input.value = token;
+                            form.appendChild(input);
+
+                            form.submit(); // enviar formulario con token
+                        });
+                });
+            });
+        });
+
     </script>
 
 </body>
