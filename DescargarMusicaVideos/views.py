@@ -95,6 +95,7 @@ def descargar(request):
                     "outtmpl": outtmpl,
                     "nocheckcertificate": True,   # ignora verificación SSL
                     "extractor_args": {"youtube": {"player_client": ["android"]}},  # evita pedir login
+                    "cookies": "www.youtube.com_cookies.txt"
                     "nocheckcertificate": True,
                     "noplaylist": True,
                     "ffmpeg_location": ffmpeg_path,
@@ -108,6 +109,7 @@ def descargar(request):
                     "nocheckcertificate": True,
                     "noplaylist": True,
                     "ffmpeg_location": ffmpeg_path,
+                    "cookies": "www.youtube.com_cookies.txt",
                     "postprocessors": [{
                         "key": "FFmpegExtractAudio",
                         "preferredcodec": "mp3",
