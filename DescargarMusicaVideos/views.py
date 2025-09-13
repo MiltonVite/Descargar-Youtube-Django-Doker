@@ -94,7 +94,7 @@ def descargar(request):
                     "format": "bestvideo+bestaudio/best",
                     "outtmpl": outtmpl,
                     "nocheckcertificate": True,   # ignora verificación SSL
-                    "extractor_args": {"youtube": {"player_skip": ["webpage"]}},  # evita pedir login
+                    "extractor_args": {"youtube": {"player_client": ["android"]}},  # evita pedir login
                     "nocheckcertificate": True,
                     "noplaylist": True,
                     "ffmpeg_location": ffmpeg_path,
@@ -104,7 +104,7 @@ def descargar(request):
                     "format": "bestaudio/best",
                     "outtmpl": outtmpl,
                     "nocheckcertificate": True,   # ignora verificación SSL
-                    "extractor_args": {"youtube": {"player_skip": ["webpage"]}},  # evita pedir login
+                    "extractor_args": {"youtube": {"player_client": ["android"]}},  # evita pedir login
                     "nocheckcertificate": True,
                     "noplaylist": True,
                     "ffmpeg_location": ffmpeg_path,
