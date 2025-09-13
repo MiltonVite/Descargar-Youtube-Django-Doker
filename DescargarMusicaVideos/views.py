@@ -93,17 +93,21 @@ def descargar(request):
                 yt_opts = {
                     "format": "bestvideo+bestaudio/best",
                     "outtmpl": outtmpl,
+                    "nocheckcertificate": True,   # ignora verificación SSL
+                    "extractor_args": {"youtube": {"player_skip": ["webpage"]}},  # evita pedir login
+                    "nocheckcertificate": True,
                     "noplaylist": True,
                     "ffmpeg_location": ffmpeg_path,
-                    "cookiefile": cookies_path if os.path.exists(cookies_path) else None,
                 }
             elif formato == 'audio':
                 yt_opts = {
                     "format": "bestaudio/best",
                     "outtmpl": outtmpl,
+                    "nocheckcertificate": True,   # ignora verificación SSL
+                    "extractor_args": {"youtube": {"player_skip": ["webpage"]}},  # evita pedir login
+                    "nocheckcertificate": True,
                     "noplaylist": True,
                     "ffmpeg_location": ffmpeg_path,
-                    "cookiefile": cookies_path if os.path.exists(cookies_path) else None,
                     "postprocessors": [{
                         "key": "FFmpegExtractAudio",
                         "preferredcodec": "mp3",
