@@ -3,8 +3,6 @@ FROM python:3.13-slim
 
 # Evitar preguntas de instalación
 ENV DEBIAN_FRONTEND=noninteractive
-ENV COOKIE_FILE=/run/secrets/cookies.txt
-ENV COOKIES_PATH=/run/secrets/cookies.txt
 
 # Instalar dependencias del sistema necesarias
 RUN apt-get update && apt-get install -y \
@@ -28,6 +26,9 @@ RUN pip install --no-cache-dir -r requerimientos.txt
 
 # Copiar el resto del proyecto
 COPY . .
+
+# Copiar cookies a una ruta fija dentro del contenedor
+RUN cp DescargarMusicaVideos/www.youtube.com_cookies.txt /app/cookies.txt
 
 # Exponer el puerto que usa Django (8000 por defecto)
 EXPOSE 8000

@@ -81,7 +81,7 @@ def descargar(request):
             temp_dir = tempfile.mkdtemp()
             outtmpl = os.path.join(temp_dir, "%(title)s.%(ext)s")
             ffmpeg_path = "/usr/bin/ffmpeg"
-            cookies_path = '/run/secrets/cookies.txt'  # Render lo monta aquí
+            cookies_path = "/app/cookies.txt"  # 👈 ruta fija dentro del contenedor
 
             if not os.path.exists(ffmpeg_path):
                 print(f"[WARN] ffmpeg no encontrado en {ffmpeg_path}")
@@ -89,33 +89,27 @@ def descargar(request):
                 print(f"[WARN] Cookies no encontradas en {cookies_path}")
 
             # Opciones de yt-dlp
+            yt_opts = {
+                "outtmpl": outtmpl,
+                "nocheckcertificate": True,   # ignora verificación SSL
+                "extractor_args": {"youtube": {"player_client": ["android"]}},  # evita pedir login
+                "noplaylist": True,
+                "ffmpeg_location": ffmpeg_path,
+            }
+
+            # usar cookies solo si existen
+            if os.path.exists(cookies_path):
+                yt_opts["cookies"] = cookies_path
+
             if formato == 'video':
-                yt_opts = {
-                    "format": "bestvideo+bestaudio/best",
-                    "outtmpl": outtmpl,
-                    "nocheckcertificate": True,   # ignora verificación SSL
-                    "extractor_args": {"youtube": {"player_client": ["android"]}},  # evita pedir login
-                    "cookies": "www.youtube.com_cookies.txt",
-                    "nocheckcertificate": True,
-                    "noplaylist": True,
-                    "ffmpeg_location": ffmpeg_path,
-                }
+                yt_opts["format"] = "bestvideo+bestaudio/best"
             elif formato == 'audio':
-                yt_opts = {
-                    "format": "bestaudio/best",
-                    "outtmpl": outtmpl,
-                    "nocheckcertificate": True,   # ignora verificación SSL
-                    "extractor_args": {"youtube": {"player_client": ["android"]}},  # evita pedir login
-                    "nocheckcertificate": True,
-                    "noplaylist": True,
-                    "ffmpeg_location": ffmpeg_path,
-                    "cookies": "www.youtube.com_cookies.txt",
-                    "postprocessors": [{
-                        "key": "FFmpegExtractAudio",
-                        "preferredcodec": "mp3",
-                        "preferredquality": "192",
-                    }],
-                }
+                yt_opts["format"] = "bestaudio/best"
+                yt_opts["postprocessors"] = [{
+                    "key": "FFmpegExtractAudio",
+                    "preferredcodec": "mp3",
+                    "preferredquality": "192",
+                }]
             else:
                 return render(request, 'descargar.html', {
                     'error': 'Formato no soportado. Elige Audio o Video.'
