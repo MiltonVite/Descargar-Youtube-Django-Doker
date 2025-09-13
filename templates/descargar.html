@@ -231,7 +231,7 @@
                             <!-- Opción VIDEO -->
                             <!-- Opción VIDEO -->
                             <div class="col-md-6">
-                                <form method="post" action="{% url 'descargar_musica' %}">
+                                <form id="formVideo" method="post" action="{% url 'descargar_musica' %}">
                                     {% csrf_token %}
                                     <input type="hidden" id="hiddenUrlVideo" name="url" value="">
                                     <input type="hidden" name="formato" value="video">
@@ -242,11 +242,12 @@
                                         </div>
                                     </button>
                                 </form>
+
                             </div>
 
                             <!-- Opción AUDIO -->
                             <div class="col-md-6">
-                                <form method="post" action="{% url 'descargar_musica' %}">
+                                <form id="formAudio" method="post" action="{% url 'descargar_musica' %}">
                                     {% csrf_token %}
                                     <input type="hidden" id="hiddenUrlAudio" name="url" value="">
                                     <input type="hidden" name="formato" value="audio">
@@ -288,30 +289,35 @@
         });
 
         document.addEventListener("DOMContentLoaded", function () {
-            const form = document.getElementById("downloadForm");
+            function attachRecaptcha(form) {
+                form.addEventListener("submit", function (e) {
+                    e.preventDefault(); // detener envío hasta obtener token
+                    grecaptcha.ready(function () {
+                        grecaptcha.execute("6Ld6dcErAAAAABlzJMmTiEDuR7BYR9CM3UXbwHS8", { action: "download" })
+                            .then(function (token) {
+                                // Si ya existe un input con el token, eliminarlo
+                                let existing = form.querySelector('input[name="g-recaptcha-response"]');
+                                if (existing) existing.remove();
 
-            form.addEventListener("submit", function (e) {
-                e.preventDefault(); // detener envío hasta obtener token
+                                // agrega token al formulario
+                                let input = document.createElement("input");
+                                input.type = "hidden";
+                                input.name = "g-recaptcha-response";
+                                input.value = token;
+                                form.appendChild(input);
 
-                grecaptcha.ready(function () {
-                    grecaptcha.execute("6Ld6dcErAAAAABlzJMmTiEDuR7BYR9CM3UXbwHS8", { action: "download" })
-                        .then(function (token) {
-                            // Si ya existe un input con el token, eliminarlo
-                            let existing = form.querySelector('input[name="g-recaptcha-response"]');
-                            if (existing) existing.remove();
-
-                            // agrega token al formulario
-                            let input = document.createElement("input");
-                            input.type = "hidden";
-                            input.name = "g-recaptcha-response";
-                            input.value = token;
-                            form.appendChild(input);
-
-                            form.submit(); // enviar formulario con token
-                        });
+                                form.submit(); // enviar formulario con token
+                            });
+                    });
                 });
-            });
+            }
+
+            // Aplica la función a todos tus forms
+            attachRecaptcha(document.getElementById("downloadForm"));
+            attachRecaptcha(document.getElementById("formVideo"));
+            attachRecaptcha(document.getElementById("formAudio"));
         });
+
 
     </script>
 
